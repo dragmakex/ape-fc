@@ -6,14 +6,19 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 const deployedContracts = {
   31337: {
-    YourContract: {
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    ApeFightClub: {
+      address: "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
       abi: [
         {
           inputs: [
             {
+              internalType: "uint256",
+              name: "_entryFee",
+              type: "uint256",
+            },
+            {
               internalType: "address",
-              name: "_owner",
+              name: "_apeCoinAddress",
               type: "address",
             },
           ],
@@ -26,42 +31,120 @@ const deployedContracts = {
             {
               indexed: true,
               internalType: "address",
-              name: "greetingSetter",
+              name: "player",
               type: "address",
             },
             {
               indexed: false,
-              internalType: "string",
-              name: "newGreeting",
-              type: "string",
+              internalType: "uint256",
+              name: "guess",
+              type: "uint256",
             },
+          ],
+          name: "AnswerSubmitted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
             {
               indexed: false,
-              internalType: "bool",
-              name: "premium",
-              type: "bool",
+              internalType: "address",
+              name: "winner",
+              type: "address",
             },
             {
               indexed: false,
               internalType: "uint256",
-              name: "value",
+              name: "winningAmount",
               type: "uint256",
             },
           ],
-          name: "GreetingChange",
+          name: "GameEnded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "previousOwner",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "newOwner",
+              type: "address",
+            },
+          ],
+          name: "OwnershipTransferred",
           type: "event",
         },
         {
           inputs: [],
-          name: "greeting",
+          name: "apeCoin",
           outputs: [
             {
-              internalType: "string",
+              internalType: "contract IERC20",
               name: "",
-              type: "string",
+              type: "address",
             },
           ],
           stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "correctAnswer",
+              type: "uint256",
+            },
+          ],
+          name: "endGame",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "entryFee",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "hasGuessed",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "joinGame",
+          outputs: [],
+          stateMutability: "nonpayable",
           type: "function",
         },
         {
@@ -78,34 +161,52 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [],
-          name: "premium",
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "players",
           outputs: [
             {
-              internalType: "bool",
-              name: "",
-              type: "bool",
+              internalType: "address",
+              name: "playerAddress",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "guess",
+              type: "uint256",
             },
           ],
           stateMutability: "view",
           type: "function",
         },
         {
+          inputs: [],
+          name: "renounceOwnership",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
           inputs: [
             {
-              internalType: "string",
-              name: "_newGreeting",
-              type: "string",
+              internalType: "uint256",
+              name: "guess",
+              type: "uint256",
             },
           ],
-          name: "setGreeting",
+          name: "submitAnswer",
           outputs: [],
-          stateMutability: "payable",
+          stateMutability: "nonpayable",
           type: "function",
         },
         {
           inputs: [],
-          name: "totalCounter",
+          name: "totalAmount",
           outputs: [
             {
               internalType: "uint256",
@@ -120,34 +221,34 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "address",
-              name: "",
+              name: "newOwner",
               type: "address",
             },
           ],
-          name: "userGreetingCounter",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "withdraw",
+          name: "transferOwnership",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
         },
         {
-          stateMutability: "payable",
-          type: "receive",
+          inputs: [],
+          name: "winner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
         },
       ],
-      inheritedFunctions: {},
+      inheritedFunctions: {
+        owner: "@openzeppelin/contracts/access/Ownable.sol",
+        renounceOwnership: "@openzeppelin/contracts/access/Ownable.sol",
+        transferOwnership: "@openzeppelin/contracts/access/Ownable.sol",
+      },
     },
   },
 } as const;

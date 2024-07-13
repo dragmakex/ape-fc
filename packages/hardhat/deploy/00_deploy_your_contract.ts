@@ -1,44 +1,31 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { Contract } from "ethers";
-
+import { ethers } from "hardhat";
 /**
- * Deploys a contract named "YourContract" using the deployer account and
- * constructor arguments set to the deployer address
+ * Deploys the ApeFightClub contract using the deployer account and
+ * constructor arguments set to the appropriate values.
  *
  * @param hre HardhatRuntimeEnvironment object.
  */
-const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  /*
-    On localhost, the deployer account is the one that comes with Hardhat, which is already funded.
-
-    When deploying to live networks (e.g `yarn deploy --network sepolia`), the deployer account
-    should have sufficient balance to pay for the gas fees for contract creation.
-
-    You can generate a random account with `yarn generate` which will fill DEPLOYER_PRIVATE_KEY
-    with a random private key in the .env file (then used on hardhat.config.ts)
-    You can run the `yarn account` command to check your balance in every network.
-  */
+const deployApeFightClub: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy("YourContract", {
+  // Define the entry fee and ApeCoin address for the constructor arguments
+  const entryFee = ethers.parseUnits("1", 18); // Example entry fee of 1 ApeCoin
+  const apeCoinAddress = "0x1234567890abcdef1234567890abcdef12345678"; // Replace with actual ApeCoin contract address
+
+  await deploy("ApeFightClub", {
     from: deployer,
     // Contract constructor arguments
-    args: [deployer],
+    args: [entryFee, apeCoinAddress],
     log: true,
-    // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
-    // automatically mining the contract deployment transaction. There is no effect on live networks.
     autoMine: true,
   });
-
-  // Get the deployed contract to interact with it after deploying.
-  const yourContract = await hre.ethers.getContract<Contract>("YourContract", deployer);
-  console.log("👋 Initial greeting:", await yourContract.greeting());
 };
 
-export default deployYourContract;
+export default deployApeFightClub;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
-// e.g. yarn deploy --tags YourContract
-deployYourContract.tags = ["YourContract"];
+// e.g. yarn deploy --tags ApeFightClub
+deployApeFightClub.tags = ["ApeFightClub"];
