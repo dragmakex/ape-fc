@@ -1,71 +1,172 @@
-"use client";
-
-import Link from "next/link";
-import type { NextPage } from "next";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
-import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Address } from "~~/components/scaffold-eth";
+import { parseEther } from "viem";
+import { Button } from "~~/components/ui/button";
+import { Input } from "~~/components/ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~~/components/ui/card";
+import { useScaffoldReadContract, useScaffoldWriteContract, useScaffoldWatchContractEvent } from "~~/hooks/scaffold-eth";
 
-const Home: NextPage = () => {
-  const { address: connectedAddress } = useAccount();
+const ApeFightClub = () => {
+  const router = useRouter();
+  const { address } = useAccount();
+  const [gameState, setGameState] = useState("join");
+  const [guess, setGuess] = useState("");
+  const [question, setQuestion] = useState("");
+  const [blocksPassed, setBlocksPassed] = useState(0);
+
+  // Read contract data
+  const { data: entryFee } = useScaffoldReadContract({
+    contractName: "ApeFightClub",
+    functionName: "entryFee",
+  });
+
+  const { data: currentQuestionId } = useScaffoldReadContract({
+    contractName: "ApeFightClub",
+    functionName: "currentQuestionId",
+  });
+
+  const { data: questionPickedBlock } = useScaffoldReadContract({
+    contractName: "ApeFightClub",
+    functionName: "questionPickedBlock",
+  });
+
+  // Write contract functions
+  const { writeAsync: joinGame, isLoading: isJoining } = useScaffoldWriteContract({
+    contractName: "ApeFightClub",
+    functionName: "joinGame",
+    value: entryFee,
+  });
+
+  const { writeAsync: submitAnswer, isLoading: isSubmitting } = useScaffoldWriteContract({
+    contractName: "ApeFightClub",
+    functionName: "submitAnswer",
+    args: [guess],
+  });
+
+  // Event subscriptions
+  useScaffoldWatchContractEvent({
+    contractName: "ApeFightClub",
+    eventName: "QuestionPicked",
+    listener: logs => {
+      const { questionId, text } = logs[0].args;
+      setQuestion(text);
+      setGameState("guessing");
+    },
+  });
+
+  useScaffoldWatchContractEvent({
+    contractName: "ApeFightClub",
+    eventName: "GameEnded",
+    listener: logs => {
+      const { winner, winningAmount } = logs[0].args;
+      router.push(`/results?winner=${winner}&amount=${winningAmount}`);
+    },
+  });
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (gameState === "guessing" && questionPickedBlock) {
+        setBlocksPassed(prevBlocks => prevBlocks + 1);
+      }
+    }, 15000); // Assuming 15-second block time
+
+    return () => clearInterval(intervalId);
+  }, [gameState, questionPickedBlock]);
+
+  useEffect(() => {
+    if (blocksPassed >= 3 && gameState === "guessing") {
+      handleSubmitGuess();
+    }
+  }, [blocksPassed]);
+
+  const handleJoinGame = async () => {
+    try {
+      await joinGame();
+      setGameState("waiting");
+    } catch (error) {
+      console.error("Error joining game:", error);
+    }
+  };
+
+  const handleSubmitGuess = async () => {
+    if (guess) {
+      try {
+        await submitAnswer();
+        setGameState("waiting_results");
+      } catch (error) {
+        console.error("Error submitting guess:", error);
+      }
+    }
+  };
+
+  const renderContent = () => {
+    switch (gameState) {
+      case "join":
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle>Join Ape Fight Club</CardTitle>
+              <CardDescription>Pay {entryFee ? parseEther(entryFee.toString()) : "..."} Ape Coins to join the game</CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <Button onClick={handleJoinGame} disabled={isJoining}>
+                {isJoining ? "Joining..." : "Join Game"}
+              </Button>
+            </CardFooter>
+          </Card>
+        );
+      case "waiting":
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle>Waiting for Question</CardTitle>
+              <CardDescription>The game will start soon...</CardDescription>
+            </CardHeader>
+          </Card>
+        );
+      case "guessing":
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle>Make Your Guess</CardTitle>
+              <CardDescription>{question}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Input
+                type="number"
+                value={guess}
+                onChange={e => setGuess(e.target.value)}
+                onPaste={e => e.preventDefault()}
+              />
+              <p>Blocks passed: {blocksPassed}</p>
+            </CardContent>
+            <CardFooter>
+              <Button onClick={handleSubmitGuess} disabled={isSubmitting || blocksPassed >= 3}>
+                Submit Guess
+              </Button>
+            </CardFooter>
+          </Card>
+        );
+      case "waiting_results":
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle>Waiting for Results</CardTitle>
+              <CardDescription>The winner will be announced soon...</CardDescription>
+            </CardHeader>
+          </Card>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
-    <>
-      <div className="flex items-center flex-col flex-grow pt-10">
-        <div className="px-5">
-          <h1 className="text-center">
-            <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
-          </h1>
-          <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">
-            <p className="my-2 font-medium">Connected Address:</p>
-            <Address address={connectedAddress} />
-          </div>
-          <p className="text-center text-lg">
-            Get started by editing{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/nextjs/app/page.tsx
-            </code>
-          </p>
-          <p className="text-center text-lg">
-            Edit your smart contract{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              YourContract.sol
-            </code>{" "}
-            in{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/hardhat/contracts
-            </code>
-          </p>
-        </div>
-
-        <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <BugAntIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contracts
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+    <div className="flex items-center justify-center min-h-screen bg-base-200">
+      <div className="p-4 bg-base-100 rounded-xl shadow-xl">{renderContent()}</div>
+    </div>
   );
 };
 
-export default Home;
+export default ApeFightClub;
