@@ -10,8 +10,6 @@ contract ApeFightClub is Ownable {
     address public winner;
     uint256 public totalAmount;
     IERC20 public apeCoin;
-    uint256 public gameStartTime;
-    bool public gameRunning;
 
     struct Player {
         address playerAddress;
@@ -71,7 +69,7 @@ contract ApeFightClub is Ownable {
 
     function pickQuestion() public onlyOwner {
         require(questionCount > 0, "No questions available");
-        currentQuestionId = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao))) % questionCount;
+        currentQuestionId = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % questionCount;
         questionPickedBlock = block.number;
         emit QuestionPicked(currentQuestionId, questions[currentQuestionId].text);
     }
@@ -119,7 +117,6 @@ contract ApeFightClub is Ownable {
             hasGuessed[players[i].playerAddress] = false;
         }
         delete players;
-        gameRunning = false;
 
         require(apeCoin.transfer(winner, winningAmount), "Transfer failed");
 
