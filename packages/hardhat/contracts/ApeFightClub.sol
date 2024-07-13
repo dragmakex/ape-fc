@@ -33,7 +33,7 @@ contract ApeFightClub is Ownable {
     event QuestionAdded(uint256 questionId, string text);
     event QuestionPicked(uint256 questionId, string text);
 
-    constructor(uint256 _entryFee, address _apeCoinAddress) Ownable() {
+    constructor(uint256 _entryFee, address _apeCoinAddress) payable Ownable(msg.sender) {
         entryFee = _entryFee;
         apeCoin = IERC20(_apeCoinAddress);
         // Predefine questions
@@ -74,7 +74,7 @@ contract ApeFightClub is Ownable {
         emit QuestionPicked(currentQuestionId, questions[currentQuestionId].text);
     }
 
-    function joinGame() public {
+    function joinGame() public payable {
         require(apeCoin.transferFrom(msg.sender, address(this), entryFee), "Transfer failed");
         totalAmount += entryFee;
         players.push(Player(msg.sender, 0));
@@ -95,7 +95,7 @@ contract ApeFightClub is Ownable {
         emit AnswerSubmitted(msg.sender, guess);
     }
 
-    function endGame() public onlyOwner {
+    function endGame() public payable onlyOwner {
         require(players.length > 0, "No players have joined the game");
         require(block.number > questionPickedBlock + 3, "Game period has not ended");
 
