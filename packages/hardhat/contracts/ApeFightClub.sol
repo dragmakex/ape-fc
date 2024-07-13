@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract ApeFightClub is Ownable {
+
     uint256 public entryFee;
     address public winner;
     uint256 public totalAmount;
@@ -41,7 +42,26 @@ contract ApeFightClub is Ownable {
         _addQuestion("What is the birth year of Vitalik Buterin?", 1994);
         _addQuestion("How many Ethereum were in the initial supply?", 72000000);
         _addQuestion("What is the maximum supply of Bitcoin?", 21000000);
+        _addQuestion("What year was the Bitcoin whitepaper published?", 2008);
+        _addQuestion("What year was the Ethereum mainnet launched?", 2015);
+        _addQuestion("How many Bitcoin will ever be created?", 21000000);
+        _addQuestion("What is the block reward for Bitcoin as of 2020?", 625000000); // 6.25 BTC in satoshis
+        _addQuestion("How many seconds does it take to mine a new block in Ethereum?", 15);
+        _addQuestion("What is the block time for Litecoin in seconds?", 150);
+        _addQuestion("In what year did Ethereum undergo the 'DAO hack'?", 2016);
+        _addQuestion("What year was the first Bitcoin block mined?", 2009);
+        _addQuestion("What is the block reward for Ethereum as of 2021?", 2000000000); // 2 ETH in wei
+        _addQuestion("What is the total supply of Binance Coin (BNB)?", 170532785);
+        _addQuestion("What year was the first Bitcoin transaction made?", 2010);
+        _addQuestion("What year did Bitcoin reach a price of $1 for the first time?", 2011);
+        _addQuestion("What year was the Mt. Gox hack?", 2014);
+        _addQuestion("What year did Bitcoin first reach $10,000?", 2017);
+        _addQuestion("What year was the Lightning Network whitepaper published?", 2015);
+        _addQuestion("What year did Ethereum first reach $1,000?", 2018);
+        _addQuestion("How many Bitcoin were lost in the Mt. Gox hack?", 850000); // 850,000 BTC
+        _addQuestion("What is the maximum supply of Chainlink (LINK)?", 1000000000); // 1 billion LINK
     }
+
 
     function _addQuestion(string memory text, uint256 answer) internal {
         questions[questionCount] = Question(text, answer);
@@ -49,13 +69,9 @@ contract ApeFightClub is Ownable {
         questionCount++;
     }
 
-    function addQuestion(string memory text, uint256 answer) public onlyOwner {
-        _addQuestion(text, answer);
-    }
-
     function pickQuestion() public onlyOwner {
         require(questionCount > 0, "No questions available");
-        currentQuestionId = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % questionCount;
+        currentQuestionId = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao))) % questionCount;
         questionPickedBlock = block.number;
         emit QuestionPicked(currentQuestionId, questions[currentQuestionId].text);
     }
@@ -98,9 +114,12 @@ contract ApeFightClub is Ownable {
         uint256 winningAmount = totalAmount;
         totalAmount = 0;
 
-        // Ensure the state is updated before sending ApeCoin
+        // Reset players and hasGuessed mapping
+        for (uint256 i = 0; i < players.length; i++) {
+            hasGuessed[players[i].playerAddress] = false;
+        }
         delete players;
-        delete hasGuessed;
+        gameRunning = false;
 
         require(apeCoin.transfer(winner, winningAmount), "Transfer failed");
 
