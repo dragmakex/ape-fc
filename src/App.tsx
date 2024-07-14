@@ -64,7 +64,7 @@ function App() {
         setGameResult(null);
         setTransactionHash(null);
 
-        const receipt = await contract.methods.enterGame().send({ from: account, value: Web3.utils.toWei(amount, 'ether') });
+        const receipt = await contract.methods.donate().send({ from: account, value: Web3.utils.toWei(amount, 'ether') });
         console.log('Successfully joined the game');
         setTransactionHash(receipt.transactionHash);
         
@@ -115,7 +115,7 @@ function App() {
             type="text"
             value={amount}
             onChange={handleAmountChange}
-            className="text-purple-500 text-center text-3xl p-2 mb-4"
+            className="text-purple-500 text-center text-3xl p-2 mb-4 input-button-size"
             placeholder="Enter amount in ETH"
           />
           {error && <p className="text-red-500">{error}</p>}
@@ -124,7 +124,7 @@ function App() {
               <button
                 type="button"
                 onClick={enterGame}
-                className="flex items-center justify-center bg-gradient-to-r from-indigo-500 via-pink-500 to-blue-500 hover:from-indigo-600 hover:via-pink-600 hover:to-blue-600 focus:outline-none text-white text-3xl uppercase font-bold shadow-md mx-auto p-6 duration-500 animate-pulse"
+                className="flex items-center justify-center bg-gradient-to-r from-indigo-500 via-pink-500 to-blue-500 hover:from-indigo-600 hover:via-pink-600 hover:to-blue-600 focus:outline-none text-white text-3xl uppercase font-bold shadow-md mx-auto p-6 duration-500 animate-pulse input-button-size"
               >
                 Let's Gamble!
               </button>

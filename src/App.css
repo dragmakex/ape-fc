@@ -44,3 +44,7 @@
 @keyframes blinker {
   50% { opacity: 0; }
 }
+
+.input-button-size {
+  width: 300px; /* Adjust this value to match your desired width */
+}
