@@ -1,46 +1,27 @@
-# Getting Started with Create React App
+https://ethglobal.com/events/brussels/project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+Introducing Scout the Stakes — a revolutionary decentralized mini gambling game, expertly crafted and deployed on the robust Ethereum blockchain. This state-of-the-art smart contract game offers a transparent, trustless gaming experience, allowing users to wager and win in an environment that emphasizes safety and fairness.
 
-In the project directory, you can run:
+Key Features of EtherWager:
 
-### `npm start`
+Immutable Ownership: Securely set, the ownership of the contract lies with the creator, ensuring a stable and reliable platform where only the designated owner can perform critical administrative tasks.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Transparent Game Results: Every game action is logged and public. From the amount wagered by the last player, their chances of winning, to the outcome of each game, everything is traceable and verifiable, enhancing player confidence and trust.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Real-Time Event Notifications: With events like GameResult and DonationReceived, players and donors receive immediate confirmations of their transactions and actions, ensuring a seamless and engaging user experience.
 
-### `npm test`
+User-Driven Participation: Anyone can participate by simply sending ETH to the contract. The enterGame function allows for straightforward gameplay, and the smart contract logic ensures that your chances of winning are fairly calculated based on your wager relative to the total contract balance.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Secure Random Number Generation: Utilizing a pseudo-random number generated through the Ethereum blockchain’s keccak256 algorithm, the game provides an adequately random outcome for the casual gambling environment, ensuring each game is both exciting and fair.
 
-### `npm run build`
+Generous Payouts: Winners receive a substantial payout, calculated as 95% of the contract's current balance, delivered directly and securely through the Ethereum network.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Open for Donations: EtherWager accepts donations that enhance the prize pool, making the games more exciting and increasing the stakes for all participants. Each donation is acknowledged through blockchain events, adding to the donor's recognition.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Exclusive Withdrawal Rights: Designed with security in mind, only the contract owner can withdraw the balance, ensuring that the accumulated funds are managed responsibly and with integrity.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Scout the Stakes is not just a game; it’s a secure, decentralized platform where the thrill of gambling meets the transparency and reliability of blockchain technology. Dive into the future of online gambling where every bet is safe, every game is fair, and every transaction is recorded on the Ethereum blockchain. Join us at EtherWager and place your bets in the world's most trustless and transparent gambling arena!
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+You like to gamble? You like to loose money and appear as the biggest looser? We might have a leaderboard you can concur!
