@@ -64,7 +64,7 @@ function App() {
         setGameResult(null);
         setTransactionHash(null);
 
-        const receipt = await contract.methods.donate().send({ from: account, value: Web3.utils.toWei(amount, 'ether') });
+        const receipt = await contract.methods.enterGame().send({ from: account, value: Web3.utils.toWei(amount, 'ether') });
         console.log('Successfully joined the game');
         setTransactionHash(receipt.transactionHash);
         
