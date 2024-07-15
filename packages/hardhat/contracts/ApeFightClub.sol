@@ -35,7 +35,7 @@ contract ApeFightClub is Ownable {
 	constructor(
 		uint256 _entryFee,
 		address _apeCoinAddress
-	) Ownable(msg.sender) {
+	) Ownable() {
 		entryFee = _entryFee;
 		apeCoin = IERC20(_apeCoinAddress);
 		// Predefine questions

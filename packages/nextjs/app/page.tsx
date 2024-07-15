@@ -1,5 +1,7 @@
+"use client";  // Mark the file as a Client Component
+
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";  // Replace next/router with next/navigation
 import { useAccount } from "wagmi";
 import { parseEther } from "viem";
 import { Button } from "~~/components/ui/button";

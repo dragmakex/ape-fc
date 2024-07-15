@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     ApeFightClub: {
-      address: "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
+      address: "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
       abi: [
         {
           inputs: [
@@ -83,6 +83,44 @@ const deployedContracts = {
           type: "event",
         },
         {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "questionId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "text",
+              type: "string",
+            },
+          ],
+          name: "QuestionAdded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "questionId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "text",
+              type: "string",
+            },
+          ],
+          name: "QuestionPicked",
+          type: "event",
+        },
+        {
           inputs: [],
           name: "apeCoin",
           outputs: [
@@ -96,16 +134,23 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [
+          inputs: [],
+          name: "currentQuestionId",
+          outputs: [
             {
               internalType: "uint256",
-              name: "correctAnswer",
+              name: "",
               type: "uint256",
             },
           ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
           name: "endGame",
           outputs: [],
-          stateMutability: "nonpayable",
+          stateMutability: "payable",
           type: "function",
         },
         {
@@ -144,7 +189,7 @@ const deployedContracts = {
           inputs: [],
           name: "joinGame",
           outputs: [],
-          stateMutability: "nonpayable",
+          stateMutability: "payable",
           type: "function",
         },
         {
@@ -158,6 +203,13 @@ const deployedContracts = {
             },
           ],
           stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "pickQuestion",
+          outputs: [],
+          stateMutability: "nonpayable",
           type: "function",
         },
         {
@@ -178,6 +230,56 @@ const deployedContracts = {
             {
               internalType: "uint256",
               name: "guess",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "questionCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "questionPickedBlock",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "questions",
+          outputs: [
+            {
+              internalType: "string",
+              name: "text",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "answer",
               type: "uint256",
             },
           ],
